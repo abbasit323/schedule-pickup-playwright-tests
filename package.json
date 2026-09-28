@@ -1,0 +1,15 @@
+{
+  "name": "pickup-playwright-tests",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^24.7.0",
+    "typescript": "^5.9.0"
+  }
+}

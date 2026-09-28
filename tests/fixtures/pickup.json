@@ -1,0 +1,38 @@
+{
+  "valid": {
+    "address": "123 Main Street, Lahore",
+    "pickupDate": "2026-10-01",
+    "pickupType": "recycling",
+    "notes": "Please ring the doorbell.",
+    "expectedConfirmation": "Pickup scheduled successfully"
+  },
+  "boundary": {
+    "address": "1 A St",
+    "pickupDate": "2026-09-25",
+    "pickupType": "general",
+    "notes": ""
+  },
+  "negative": [
+    {
+      "name": "empty address",
+      "address": "",
+      "pickupDate": "2026-10-01",
+      "pickupType": "general",
+      "expectedError": "Address is required"
+    },
+    {
+      "name": "past pickup date",
+      "address": "123 Main Street, Lahore",
+      "pickupDate": "2020-01-01",
+      "pickupType": "general",
+      "expectedError": "Choose a future pickup date"
+    },
+    {
+      "name": "missing pickup type",
+      "address": "123 Main Street, Lahore",
+      "pickupDate": "2026-10-01",
+      "pickupType": "",
+      "expectedError": "Pickup type is required"
+    }
+  ]
+}

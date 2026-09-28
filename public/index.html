@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Pickup</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 48px auto; padding: 0 20px; }
+    input, select, textarea, button { display: block; box-sizing: border-box; width: 100%; margin: 8px 0 16px; padding: 10px; }
+    button, a { cursor: pointer; }
+    nav { display: flex; gap: 12px; margin-bottom: 28px; }
+    .hidden { display: none; }
+    .message { padding: 12px; border-radius: 4px; margin: 12px 0; }
+    .error { background: #fee2e2; color: #991b1b; }
+    .success { background: #dcfce7; color: #166534; }
+    .history-row { border: 1px solid #ddd; padding: 12px; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="login-page">
+      <h1>Login</h1>
+
+      <label for="email">Email</label>
+      <input id="email" data-testid="login-email" type="email">
+
+      <label for="password">Password</label>
+      <input id="password" data-testid="login-password" type="password">
+
+      <button data-testid="login-submit" onclick="login()">Sign in</button>
+      <p id="login-error" data-testid="login-error" class="message error hidden"></p>
+    </section>
+
+    <section id="dashboard-page" class="hidden">
+      <nav>
+        <button data-testid="schedule-pickup-link" onclick="showPage('pickup-page')">Schedule Pickup</button>
+        <button data-testid="pickup-history-link" onclick="showHistory()">Pickup History</button>
+        <button data-testid="logout-button" onclick="logout()">Logout</button>
+      </nav>
+
+      <h1 data-testid="dashboard-heading">Dashboard</h1>
+      <p>Welcome. Choose an action from the menu.</p>
+    </section>
+
+    <section id="pickup-page" class="hidden">
+      <nav>
+        <button onclick="showPage('dashboard-page')">Dashboard</button>
+        <button data-testid="pickup-history-link" onclick="showHistory()">Pickup History</button>
+        <button data-testid="logout-button" onclick="logout()">Logout</button>
+      </nav>
+
+      <h1>Schedule Pickup</h1>
+
+      <label for="address">Pickup address</label>
+      <input id="address" data-testid="pickup-address" type="text">
+
+      <label for="pickup-date">Pickup date</label>
+      <input id="pickup-date" data-testid="pickup-date" type="date">
+
+      <label for="pickup-type">Pickup type</label>
+      <select id="pickup-type" data-testid="pickup-type">
+        <option value="">Select a type</option>
+        <option value="general">General waste</option>
+        <option value="recycling">Recycling</option>
+      </select>
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" data-testid="pickup-notes"></textarea>
+
+      <button data-testid="pickup-submit" onclick="schedulePickup()">Schedule pickup</button>
+      <p id="pickup-validation" data-testid="pickup-validation" class="message error hidden"></p>
+      <p id="pickup-confirmation" data-testid="pickup-confirmation" class="message success hidden"></p>
+    </section>
+
+    <section id="history-page" class="hidden">
+      <nav>
+        <button onclick="showPage('dashboard-page')">Dashboard</button>
+        <button data-testid="schedule-pickup-link" onclick="showPage('pickup-page')">Schedule Pickup</button>
+        <button data-testid="logout-button" onclick="logout()">Logout</button>
+      </nav>
+
+      <h1 data-testid="pickup-history-heading">Pickup History</h1>
+      <p id="pickup-history-empty" data-testid="pickup-history-empty">No pickups scheduled yet.</p>
+      <div id="history-list"></div>
+    </section>
+  </main>
+
+  <script>
+    const validEmail = 'qa.user@example.com';
+    const validPassword = 'ValidPassword123!';
+
+    function showPage(pageId) {
+      document.querySelectorAll('main > section').forEach((section) => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    function showMessage(id, message) {
+      const element = document.getElementById(id);
+      element.textContent = message;
+      element.classList.remove('hidden');
+    }
+
+    function hideMessage(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      hideMessage('login-error');
+
+      if (!email || !password) {
+        showMessage('login-error', 'Email and password are required');
+        return;
+      }
+
+      if (!email.includes('@')) {
+        showMessage('login-error', 'Enter a valid email address');
+        return;
+      }
+
+      if (email !== validEmail || password !== validPassword) {
+        showMessage('login-error', 'Invalid email or password');
+        return;
+      }
+
+      showPage('dashboard-page');
+    }
+
+    function logout() {
+      showPage('login-page');
+    }
+
+    async function schedulePickup() {
+      const pickup = {
+        address: document.getElementById('address').value.trim(),
+        pickupDate: document.getElementById('pickup-date').value,
+        pickupType: document.getElementById('pickup-type').value,
+        notes: document.getElementById('notes').value
+      };
+
+      hideMessage('pickup-validation');
+      hideMessage('pickup-confirmation');
+
+      if (!pickup.address) {
+        showMessage('pickup-validation', 'Address is required');
+        return;
+      }
+
+      if (!pickup.pickupDate || pickup.pickupDate < '2026-09-28') {
+        showMessage('pickup-validation', 'Choose a future pickup date');
+        return;
+      }
+
+      if (!pickup.pickupType) {
+        showMessage('pickup-validation', 'Pickup type is required');
+        return;
+      }
+
+      const response = await fetch('/api/pickups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pickup)
+      });
+
+      const savedPickup = await response.json();
+      const history = JSON.parse(localStorage.getItem('pickups') || '[]');
+      history.push(savedPickup);
+      localStorage.setItem('pickups', JSON.stringify(history));
+
+      showMessage('pickup-confirmation', 'Pickup scheduled successfully');
+    }
+
+    function showHistory() {
+      const history = JSON.parse(localStorage.getItem('pickups') || '[]');
+      const list = document.getElementById('history-list');
+      const emptyState = document.getElementById('pickup-history-empty');
+
+      list.innerHTML = '';
+      emptyState.classList.toggle('hidden', history.length > 0);
+
+      history.forEach((pickup) => {
+        const row = document.createElement('article');
+        row.className = 'history-row';
+        row.setAttribute('data-testid', 'pickup-history-row');
+        row.textContent = `${pickup.address} — ${pickup.pickupDate} — ${pickup.pickupType}`;
+        list.appendChild(row);
+      });
+
+      showPage('history-page');
+    }
+  </script>
+</body>
+</html>
