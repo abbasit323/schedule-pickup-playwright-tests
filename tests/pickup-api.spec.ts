@@ -3,7 +3,7 @@ import pickupFixture from './fixtures/pickup.json';
 
 const pickupApiPath = process.env.PICKUP_API_PATH ?? '/api/pickups';
 
-test('POST pickup API returns 200 and a created pickup body', async ({ request }) => {
+test('@high POST pickup API returns 200 and a created pickup body', async ({ request }) => {
   let responseBody: Record<string, unknown>;
 
   await test.step('Create a pickup through the backend API', async () => {

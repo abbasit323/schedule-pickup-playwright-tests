@@ -16,3 +16,12 @@ This starter implements page objects for Login, Dashboard, and Schedule Pickup, 
 - Each selector is created with `page.locator()` and has a stable `data-testid`, avoiding fragile class names and XPath.
 - Fixtures separate `valid`, `boundary`, and `negative` cases. Change sample values to accounts and business rules that are safe for your test environment.
 - Never store real production passwords in fixture files. Use test-only accounts or CI secrets.
+## Regression suite and CI
+
+### Run regression tests locally
+
+```bash
+
+npm.cmd run test:regression
+npm.cmd run report:allure
+npm.cmd run report:allure:open
