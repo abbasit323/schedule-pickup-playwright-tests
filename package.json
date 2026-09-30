@@ -2,14 +2,20 @@
   "name": "pickup-playwright-tests",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
-  },
+  "start": "node server.js",
+  "test": "playwright test",
+  "test:regression": "playwright test --grep \"@critical|@high\"",
+  "test:ci": "playwright test",
+  "report:allure": "allure generate allure-results --clean -o allure-report",
+  "report:allure:open": "allure open allure-report",
+  "test:ui": "playwright test --ui",
+  "test:headed": "playwright test --headed"
+},
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.7.0",
+    "allure-commandline": "^2.46.1",
+    "allure-playwright": "^3.13.0",
     "typescript": "^5.9.0"
   }
 }

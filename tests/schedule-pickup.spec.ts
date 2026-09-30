@@ -5,7 +5,7 @@ import { DashboardPage } from '../pages/dashboard.page';
 import { LoginPage } from '../pages/login.page';
 import { SchedulePickupPage } from '../pages/schedule-pickup.page';
 
-test('a signed-in user can schedule a pickup', async ({ page }) => {
+test('@critical a signed-in user can schedule a pickup', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage(page);
   const schedulePickupPage = new SchedulePickupPage(page);
@@ -30,7 +30,7 @@ test('a signed-in user can schedule a pickup', async ({ page }) => {
 });
 
 for (const invalidPickup of pickupFixture.negative) {
-  test(`schedule pickup rejects ${invalidPickup.name}`, async ({ page }) => {
+ test(`@high schedule pickup rejects ${invalidPickup.name}`, async ({ page }) => {
     const loginPage = new LoginPage(page);
     const dashboardPage = new DashboardPage(page);
     const schedulePickupPage = new SchedulePickupPage(page);

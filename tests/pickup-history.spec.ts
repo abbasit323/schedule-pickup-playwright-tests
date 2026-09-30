@@ -6,7 +6,7 @@ import { LoginPage } from '../pages/login.page';
 import { PickupHistoryPage } from '../pages/pickup-history.page';
 import { SchedulePickupPage } from '../pages/schedule-pickup.page';
 
-test('a signed-in user can view a scheduled pickup in history', async ({ page }) => {
+ test('@high a signed-in user can view a scheduled pickup in history', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage(page);
   const schedulePickupPage = new SchedulePickupPage(page);
