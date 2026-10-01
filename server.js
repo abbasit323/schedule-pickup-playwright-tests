@@ -5,7 +5,8 @@ const path = require('path');
 const port = 3000;
 const indexPath = path.join(__dirname, 'public', 'index.html');
 
-const server = http.createServer((request, response) => {
+function createAppServer(readFile = fs.readFile) {
+  return http.createServer((request, response) => {
   if (request.method === 'POST' && request.url === '/api/pickups') {
     let body = '';
 
@@ -27,7 +28,7 @@ const server = http.createServer((request, response) => {
     return;
   }
 
-  fs.readFile(indexPath, (error, content) => {
+  readFile(indexPath, (error, content) => {
     if (error) {
       response.writeHead(500);
       response.end('Could not load the application.');
@@ -37,8 +38,14 @@ const server = http.createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': 'text/html' });
     response.end(content);
   });
-});
+  });
+}
 
-server.listen(port, () => {
-  console.log(`Schedule Pickup app is running at http://localhost:${port}`);
-});
+if (require.main === module) {
+  const server = createAppServer();
+  server.listen(port, () => {
+    console.log(`Schedule Pickup app is running at http://localhost:${port}`);
+  });
+}
+
+module.exports = { createAppServer };
