@@ -7,6 +7,7 @@ I created a tagged Playwright regression suite for critical Login, Schedule Pick
 - `@critical` tests cover valid login and valid pickup scheduling.
 - `@high` tests cover invalid login, required fields, date validation, pickup history, and API verification.
 - The suite contains 10 automated regression tests.
+- The executable `c8` coverage report enforces an 80% minimum for lines, statements, functions, and branches. The verified result is 90.19% lines/statements, 83.33% branches, and 100% functions.
 - Functional regression coverage is 100% (10 out of 10 defined critical requirements), exceeding the 80% target.
 - Tests are idempotent because every test uses an isolated Playwright browser context and self-contained fixture data.
 
@@ -20,6 +21,7 @@ This setup provides fast feedback on every code change and reduces the risk of b
 
 - Regression strategy: `docs/regression-strategy.md`
 - Coverage report: `docs/test-coverage.md`
+- Coverage command: `npm run test:coverage` (creates `coverage/lcov-report/index.html`, `coverage/lcov.info`, and JSON output)
 - Idempotency strategy: `docs/test-idempotency.md`
 - CI workflow: `.github/workflows/regression.yml`
 - Allure report: available in GitHub Actions artifacts after each workflow run.

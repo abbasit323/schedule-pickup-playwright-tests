@@ -2,7 +2,17 @@
 
 ## Coverage approach
 
-Is project mein **functional regression coverage** measure ki gayi hai. Yani har critical business requirement ko kam az kam ek automated Playwright test cover karta hai.
+Is project mein functional regression coverage aur executable JavaScript code coverage dono measure kiye jate hain. `npm run test:coverage` Playwright regression suite ke baad application-server coverage tests `c8` ke saath chalata hai aur `coverage/` mein text, JSON, aur LCOV reports banata hai.
+
+## Code coverage configuration
+
+- Tool: `c8` (V8 coverage)
+- Source measured: `server.js`
+- Minimum required coverage: 80% for lines, functions, branches, aur statements
+- CI command: `npm run test:ci`
+- CI artifact: `coverage-report`
+
+Coverage threshold se kam result par `c8` non-zero exit code deta hai, is liye CI run fail ho jata hai. Local report dekhne ke liye `npm run test:coverage` chalayein aur `coverage/lcov-report/index.html` kholen.
 
 ## Critical requirements coverage
 
